@@ -10,6 +10,9 @@ class TestProfileFeature(BaseTest):
     @allure.severity("Critical")
     @pytest.mark.smoke
     def test_change_profile_name(self):
+        random_number = random.randint(1, 100)
+
+
         self.login_page.open()
         self.login_page.enter_login(self.data.LOGIN)
         self.login_page.enter_password(self.data.PASSWORD)
@@ -17,7 +20,9 @@ class TestProfileFeature(BaseTest):
         self.dashboard_page.is_open()
         self.dashboard_page.click_my_info_link()
         self.personal_page.is_open()
-        self.personal_page.change_name(f"Test {random.randint(1,100)}")
+        self.personal_page.change_first_name(f"Test first name {random_number}")
+        self.personal_page.change_middle_name(f"Test middle name {random_number}")
+        self.personal_page.change_last_name(f"Test last name {random_number}")
         self.personal_page.save_changes()
         self.personal_page.is_changes_saved()
         self.personal_page.make_screenshot("Success")
