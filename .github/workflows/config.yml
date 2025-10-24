@@ -27,10 +27,15 @@ jobs:
         run: |
           docker-compose up --exit-code-from regression || true
 
-      - name: Copy history from gh-pages to allure-results
+      - name: Create directories and copy history
         run: |
-          mkdir -p allure-results/history
-          cp -R ./.github/gh-pages/history/* allure-results/history/ 2>/dev/null || true
+          mkdir -p allure-results
+          # Копируем историю если она существует
+          if [ -d "./.github/gh-pages/history" ]; then
+            cp -R ./.github/gh-pages/history allure-results/ || true
+          else
+            echo "No existing history found, starting fresh"
+          fi
 
       - name: Generate Allure report
         run: |
@@ -38,8 +43,8 @@ jobs:
 
       - name: Update Allure history
         run: |
-          mkdir -p ./.github/gh-pages/history
-          cp -R allure-report/history/* ./.github/gh-pages/history/
+          mkdir -p ./.github/gh-pages
+          cp -R allure-report/history ./.github/gh-pages/ || true
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
